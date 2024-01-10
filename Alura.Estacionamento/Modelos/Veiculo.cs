@@ -98,7 +98,7 @@ namespace Alura.Estacionamento.Modelos
             this.VelocidadeAtual -= (tempoSeg * 15);
         }
 
-        public void AlteraDadosVeiculo(Veiculo veiculoAlterado)
+        public void AlteraDadosVeiculoPorPlaca(Veiculo veiculoAlterado)
         {
             this.Proprietario = veiculoAlterado.Proprietario;
             this.Modelo = veiculoAlterado.Modelo;

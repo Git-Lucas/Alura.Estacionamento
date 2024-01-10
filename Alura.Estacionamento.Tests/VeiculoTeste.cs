@@ -4,131 +4,105 @@ using System;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Alura.Estacionamento.Tests
+namespace Alura.Estacionamento.Tests;
+
+public class VeiculoTeste
 {
-    public class VeiculoTeste
+    private readonly Veiculo _veiculo;
+
+    public VeiculoTeste()
     {
-        public ITestOutputHelper Output { get; }
-        private Veiculo veiculo;
-        private Operador operador;
-        public VeiculoTeste(ITestOutputHelper output)
+        _veiculo = new()
         {
-            Output = output;
-            Output.WriteLine("Execução do  construtor.");
-            veiculo = new Veiculo();
-            veiculo.Tipo = TipoVeiculo.Automovel;
-            operador = new Operador();
-            operador.Nome = "Operador Noturno";
-        }
+            Tipo = TipoVeiculo.Automovel
+        };
+    }
 
-        [Fact]
-        [Trait("Funcionalidade", "Acelerar")]
-        public void TestaVeiculoAcelerarCom10()
+    [Fact]
+    [Trait("Funcionalidade", "Acelerar")]
+    public void AceleraVeiculoComTempo10Sucesso()
+    {
+        _veiculo.Acelerar(10);
+
+        Assert.Equal(100, _veiculo.VelocidadeAtual);
+    }
+
+    [Fact]
+    [Trait("Propriedade", "Proprietário")]
+    public void NomeProprietarioVeiculoComDoisCaracteresException()
+    {
+        string nomeProprietario = "Ab";
+
+        Assert.Throws<FormatException>(
+            () => _veiculo.Proprietario = nomeProprietario
+        );
+    }
+
+    [Fact]
+    public void DefinirPlacaVeiculoCom2CaracteresException()
+    {
+        string placa = "Ab";
+
+        Assert.Throws<FormatException>(
+            () => _veiculo.Placa = placa
+        );
+    }
+
+    [Fact]
+    public void QuartoCaractereDaPlacaException()
+    {
+        string placa = "ASDF8888";
+
+        Assert.Throws<FormatException>(
+            () => _veiculo.Placa = placa
+        );
+    }
+
+    [Fact]
+    public void MensagemDeExcecaoDoQuartoCaractereDaPlaca()
+    {
+        string placa = "ASDF8888";
+
+        FormatException mensagem = Assert.Throws<FormatException>(
+            () => _veiculo.Placa = placa
+        );
+
+        Assert.Equal("O 4° caractere deve ser um hífen", mensagem.Message);
+    }
+
+    [Fact]
+    [Trait("Funcionalidade", "Frear")]
+    public void FreiaVeiculoComTempo10Sucesso()
+    {
+        _veiculo.Frear(10);
+
+        Assert.Equal(-150, _veiculo.VelocidadeAtual);
+    }
+
+    [Fact]
+    public void AlteraDadosVeiculoPorPlacaSucesso()
+    {
+        Patio estacionamento = new();
+        Veiculo veiculo = new()
         {
-            //Arrange
-            //var veiculo = new Veiculo();
-
-            //Act
-            veiculo.Acelerar(10);
-
-            //Assert
-            Assert.Equal(100, veiculo.VelocidadeAtual);
-
-        }
-
-        [Fact]
-        [Trait("Propriedade", "Proprietário")]
-        public void TestaNomeProprietarioVeiculoComDoisCaracteres()
+            Tipo = TipoVeiculo.Automovel,
+            Proprietario = "José Silva",
+            Placa = "ZXC-8524",
+            Cor = "Verde",
+            Modelo = "Opala"
+        };
+        estacionamento.RegistrarEntradaVeiculo(veiculo);
+        Veiculo veiculoAlterado = new()
         {
-            //Arrange 
-            string nomeProprietario = "Ab";
-            //Assert
-            Assert.Throws<System.FormatException>(
-                //Act
-                () => new Veiculo(nomeProprietario)
-            );
-        }
+            Tipo = TipoVeiculo.Automovel,
+            Proprietario = "José Silva",
+            Placa = "ZXC-8524",
+            Cor = "Preto", //Alterado
+            Modelo = "Opala"
+        };
 
-        [Fact]
-        public void TestaQuantidadeCaracteresPlacaVeiculo()
-        {
-            //Arrange 
-            string placa = "Ab";
-            //Assert
-            Assert.Throws<System.FormatException>(
-                //Act
-                () => new Veiculo().Placa=placa
-            );
-        }
+        var alterado = estacionamento.AlteraDadosVeiculoPorPlaca(veiculoAlterado);
 
-        [Fact]
-        public void TestaQuartoCaractereDaPlaca()
-        {
-            //Arrange 
-            string placa = "ASDF8888";
-            //Assert
-            Assert.Throws<System.FormatException>(
-                //Act
-                () => new Veiculo().Placa = placa
-            );
-        }
-
-        [Fact]
-        public void TestaMensagemDeExcecaoDoQuartoCaractereDaPlaca()
-        {
-            //Arrange 
-            string placa = "ASDF8888";
-            //Assert
-            var mensagem = Assert.Throws<System.FormatException>(
-                //Act
-                () => new Veiculo().Placa = placa
-            );
-
-            Assert.Equal("O 4° caractere deve ser um hífen", mensagem.Message);
-        }
-
-        [Fact]
-        [Trait("Funcionalidade", "Frear")]
-        public void TestaVeiculoFreiarCom10()
-        {
-            //Arrange
-            //var veiculo = new Veiculo();
-
-            //Act
-            veiculo.Frear(10);
-            //Assert
-            Assert.Equal(-150, veiculo.VelocidadeAtual);
-        }
-
-        [Fact]
-        public void TestaAlteraDadosVeiculoDeUmDeterminadoVeiculoComBaseNaPlaca()
-        {
-            //Arrange
-
-            Patio estacionamento = new Patio();
-            estacionamento.OperadorPatio = operador;
-            var veiculo = new Veiculo();
-            veiculo.Tipo = TipoVeiculo.Automovel;
-            veiculo.Proprietario = "José Silva";
-            veiculo.Placa = "ZXC-8524";
-            veiculo.Cor = "Verde";
-            veiculo.Modelo = "Opala";     
-            estacionamento.RegistrarEntradaVeiculo(veiculo);
-
-            var veiculoAlterado = new Veiculo();
-            veiculoAlterado.Tipo = TipoVeiculo.Automovel;
-            veiculoAlterado.Proprietario = "José Silva";
-            veiculoAlterado.Placa = "ZXC-8524";
-            veiculoAlterado.Cor = "Preto"; //Alterado
-            veiculoAlterado.Modelo = "Opala";
-
-
-            //Act
-            var alterado = estacionamento.AlteraDadosVeiculo(veiculoAlterado);
-
-            //Assert
-            Assert.Equal(alterado.Cor,veiculoAlterado.Cor);
-
-        }
+        Assert.Equal(alterado.Cor,veiculoAlterado.Cor);
     }
 }
