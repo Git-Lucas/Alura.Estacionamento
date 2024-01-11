@@ -1,10 +1,7 @@
-using Alura.Estacionamento.Alura.Estacionamento.Modelos;
-using Alura.Estacionamento.Modelos;
 using System;
 using Xunit;
-using Xunit.Abstractions;
 
-namespace Alura.Estacionamento.Tests;
+namespace Estacionamento.Tests;
 
 public class VeiculoTeste
 {
@@ -97,12 +94,12 @@ public class VeiculoTeste
             Tipo = TipoVeiculo.Automovel,
             Proprietario = "José Silva",
             Placa = "ZXC-8524",
-            Cor = "Preto", //Alterado
+            Cor = "Preto",
             Modelo = "Opala"
         };
 
         var alterado = estacionamento.AlteraDadosVeiculoPorPlaca(veiculoAlterado);
 
-        Assert.Equal(alterado.Cor,veiculoAlterado.Cor);
+        Assert.Equal(alterado.Cor, veiculoAlterado.Cor);
     }
 }

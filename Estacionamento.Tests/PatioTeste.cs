@@ -1,7 +1,6 @@
-﻿using Alura.Estacionamento.Modelos;
-using Xunit;
+﻿using Xunit;
 
-namespace Alura.Estacionamento.Tests;
+namespace Estacionamento.Tests;
 
 public class PatioTeste
 {
